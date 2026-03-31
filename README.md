@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Coursework Specification
 
 ## Title — NovaLang (NVL) Interpreter
@@ -95,3 +96,6 @@ You are provided with the majority of the code, and you must add to this codebas
 + −10 if hard-coded switch remains for opcode selection.
 + −10 if tests do not run correctly.
 + −5 if poor documentation.
+=======
+# Cousework-Two-The-Novalang
+>>>>>>> 08a40db6b988d7c9c2d0b6826548b88b0269fd0c
