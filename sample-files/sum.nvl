@@ -1,0 +1,23 @@
+# Sum numbers 1..10
+#
+# Initialize counter
+# Initialize sum (sum=0)
+# Set loop termination limit (while r1 < 11)
+# sum = sum + i
+# r0 = 1 (temporary register for increment)
+# i = i + 1
+# r0 = 11 - i. If r0 is > 0, then 11 > i, so i < 11
+# Jump back to LOOP if r0 != 0 (i.e., if i < 11)
+# Print the final sum (55)
+# Terminate the program
+#
+l1 set r1 1    		
+l2 set r2 0    		
+l3 set r3 11   		
+LOOP add r2 r2 r1 		
+l4 set r0 1    		
+l5 add r1 r1 r0  		
+CHECK sub r0 r3 r1
+l6 jnz r0 LOOP
+l7 print r2
+l8 halt        		

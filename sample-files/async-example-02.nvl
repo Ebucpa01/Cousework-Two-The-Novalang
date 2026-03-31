@@ -1,0 +1,9 @@
+ 	set r0 5
+	async LABEL
+	await
+	print r2
+	halt
+
+LABEL	set r1 10
+	add r2 r0 r1
+	ret

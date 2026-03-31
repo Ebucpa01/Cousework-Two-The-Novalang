@@ -1,0 +1,27 @@
+# NovaLang Program demonstrating concurrent execution using async and await.
+# The main thread starts two tasks (TASK_A and TASK_B) to run in parallel.
+
+# Register usage:
+# r10: Base value (starts at 5)
+# r20: Result of Task A (Multiplication) -> Expect 10
+# r21: Result of Task B (Addition) -> Expect 15
+# r0: Temporary register for constants (2 and 10)
+
+# --- Main Program Execution ---
+START set r10 5     
+L1	mov r20 r10   
+L2	mov r21 r10   
+L3	async TASK_A
+L4	async TASK_B
+L5	await
+L6	print r20
+L7	print r21
+L8	halt
+#
+TASK_A set r0 2
+A1	mul r20 r20 r0
+A2	ret
+#
+TASK_B set r0 10
+B1	add r21 r21 r0
+B2	ret

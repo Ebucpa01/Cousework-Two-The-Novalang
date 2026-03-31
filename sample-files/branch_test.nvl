@@ -1,0 +1,6 @@
+# Branch test
+b0 set r0 3
+b1 sub r0 r0 r22
+b2 jnz r0 b1
+b3 print r0
+b4 halt

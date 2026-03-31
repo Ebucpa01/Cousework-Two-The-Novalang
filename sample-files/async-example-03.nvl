@@ -1,0 +1,15 @@
+# Async demo
+L0 set r0 5
+L1 async M1
+L2 async N1
+L3 await
+L4 print r2
+L5 halt
+
+M1 set r1 10
+M2 add r2 r0 r1
+M3 ret
+
+N1 set r3 20
+N2 add r2 r2 r3
+N3 ret
