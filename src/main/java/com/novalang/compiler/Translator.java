@@ -143,6 +143,7 @@ public class Translator {
     public static Optional<Integer> getTargetPC(Object[] operands, int index) {
         if (!ensureOperandIsType(operands, index, Integer.class, "resolved PC index")) {
             // TODO
+            return Optional.empty(); // if it's not an Integer, we cannot use it as a PC index
         }
         return Optional.of((Integer) operands[index]);
     }
@@ -214,6 +215,8 @@ public class Translator {
     public void translate(Path path) throws IOException {
         log.info(format("Starting translation for file: %s", path));
         // TODO
+        labels.clear(); // start fresh for a new translation
+        program.clear(); //remove any previously translated instructions
 
         var lines = Files.readAllLines(path);
         log.info(format("Read %d lines from file.", lines.size()));
@@ -221,11 +224,14 @@ public class Translator {
         // Pass 1: Collect Labels
         log.info("Pass 1: Collecting labels.");
         // TODO
+        log.info("Pass 1: Collecting labels.");
+        collectLabels(lines); // first pass: find all labels before parsing instructions
         log.info(format("Collected %d labels: %s", labels.size(), labels));
 
         // Pass 2: Parse and Resolve Instructions
         log.info("Pass 2: Parsing and resolving com.novalang.instructions.");
         // TODO
+        passInstructions(lines);
         log.info(format("Translation complete. Generated %d com.novalang.instructions.", program.size()));
     }
 
@@ -251,6 +257,11 @@ public class Translator {
             // Check if the first token is a label (it is a label if it's NOT an opcode)
             if (!isOpcode(firstToken)) {
                 // TODO
+                if (labels.containsKey(firstToken)){
+                  throw new TranslationException("Duplicate label found:"+ firstToken + "at line") + (i + 1);
+                   } 
+                   labels.put (firstToken,i);// map label name to its PC index
+                
                 log.info(format("Found label '%s' at PC index %d", firstToken, i));
             } else {
                 log.info(format("Token '%s' at PC %d is an opcode, not a label.", firstToken, i));
@@ -328,6 +339,9 @@ public class Translator {
                 log.info(format("Line %d starts with opcode '%s'.", i + 1, opcode));
             } else if (tokens.length > 1 && isOpcode(tokens[1])) {
                 // TODO
+                label = tokens[0]; // first token is the label
+                opcode = tokens[1]; // second token is the opcode
+                operandTokens = Arrays.copyOfRange(tokens, 2, tokens.length);
                 log.info(format("Line %d has label '%s' and opcode '%s'.", i + 1, label, opcode));
             } else {
                 log.warning(format("Invalid syntax or unknown opcode/label at line %d: %s", (i + 1), line));
@@ -338,6 +352,7 @@ public class Translator {
 
             try {
                 // TODO
+                var clazz = Class.forName(fullClassName);// load instruction class dynamically
                 log.info(format("Resolved opcode '%s' to class '%s'.", opcode, fullClassName));
 
                 // Prepare operands: Resolve labels to PC index immediately
@@ -346,10 +361,11 @@ public class Translator {
 
                 // Get the mandatory reflection constructor signature: (String label, Object... operands)
                 // TODO
-                log.info(format("Found constructor for class '%s'.", fullClassName));
+                var constructor = clazz.getConstructor(String.class, Object[].class); // expected constructor: (String, Object...)                log.info(format("Found constructor for class '%s'.", fullClassName));
 
                 // Reflection: Instantiate the instruction dynamically
                 // TODO
+                var instruction = (Instruction) constructor.newInstance(label, operands);// create instruction instance
                 program.add(instruction);
                 log.info(format("Instantiated instruction: %s at PC index %d", instruction.getClass().getSimpleName(), i));
 
