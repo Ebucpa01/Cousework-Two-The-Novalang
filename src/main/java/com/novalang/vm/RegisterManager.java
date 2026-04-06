@@ -14,11 +14,11 @@ public record RegisterManager(int[] registers) {
         return index >= 0 && index < registers.length;
     }
 
-    public Optional<Integer> get(int index) {
-        if (!isValidIndex(index)) {
-            return Optional.empty();
-        }
-        return Optional.of(registers[index]);
+    public int get(int index) {
+    if (!isValidIndex(index)) {
+        throw new IllegalArgumentException("Invalid register index: " + index);
+    }
+    return registers[index];
     }
 
     public boolean set(int index, int value) {

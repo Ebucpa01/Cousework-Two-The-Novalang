@@ -19,9 +19,8 @@ public record PrintInstr(String label, int rSrc) implements Instruction {
 
     @Override
     public Optional<Integer> execute(ProgramContext context) {
-        return context.registers().get(rSrc).map(val -> {
-            System.out.println("PC: " + context.pc() + " | PRINT (r" + rSrc + "): " + val);
-            return context.pc() + 1;
-        });
-    }
+    int val = context.registers().get(rSrc);
+    System.out.println("PC: " + context.pc() + " | PRINT (r" + rSrc + "): " + val);
+    return Optional.of(context.pc() + 1);
+}
 }

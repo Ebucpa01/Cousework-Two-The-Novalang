@@ -18,5 +18,6 @@ public class DefaultNovaVMFactory implements NovaVMFactory {
     public NovaVM create(List<Instruction> program, Map<String, Integer> labels) {
         // Delegates construction to the NovaVM's Lombok-generated constructor
         // TODO
+        return new NovaVM(program, labels);
     }
 }

@@ -47,11 +47,15 @@ public class NovaVM {
             }
 
             // Create context for the instruction
-            // TODO
-
-            // Execute the instruction and get the next PC
+            
+            var context = new ProgramContext(registers, pc, labels, contextStack, this);            // Execute the instruction and get the next PC
             Optional<Integer> nextPC = instruction.execute(context);
             // TODO
+            if (nextPC.isPresent()) {
+            pc = nextPC.get(); // jump instruction
+            } else {
+            pc++; // normal instruction → go to next line
+            }
 
             // Task termination check: 'ret' acts as halt for async tasks
             if (contextStack != callStack && instruction instanceof RetInstr) {
@@ -65,7 +69,7 @@ public class NovaVM {
      */
     public void run() {
         log.info("VM starting execution on main thread...");
-        //TODO
+        executeThread(0, callStack); // start from first instruction
 
         // Clean up resources
         executor.shutdownNow();
@@ -83,8 +87,10 @@ public class NovaVM {
         Future<?> future = executor.submit(() -> {
             // New stack for the async task
             // TODO
+            Stack<Integer> newStack = new Stack<>();
+            executeThread(0, callStack); // start from first instruction
         });
-        // TODO
+        asyncTasks.add(future);
 
         log.info("VM started async task at PC " + startPC + ". Total running tasks: " + asyncTasks.size());
     }
@@ -104,15 +110,18 @@ public class NovaVM {
                 Thread.currentThread().interrupt();
                 // Step 2: Replace System.err.println with log.severe
                 log.log(Level.SEVERE, "Await interrupted.", e);
+                throw new RuntimeException("Await interrupted", e);
             } catch (ExecutionException e) {
                 // Step 2: Replace System.err.println with log.severe
                 log.log(Level.SEVERE, "Async task failed during execution: " + e.getCause().getMessage(), e.getCause());
-            }
-        }
+                throw new RuntimeException("Async task failed", e.getCause());
+              }
+          }
+        
 
         // Clear the task set for the next 'async' block
         asyncTasks.clear();
         // Step 2: Replace System.out.println with log.info
         log.info("All async tasks completed. Main thread continuing.");
+        }
     }
-}

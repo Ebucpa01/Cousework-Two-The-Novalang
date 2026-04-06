@@ -1,0 +1,31 @@
+Reusing configuration cache.
+> Task :processTestResources NO-SOURCE
+> Task :generateEffectiveLombokConfig UP-TO-DATE
+> Task :processResources NO-SOURCE
+> Task :generateTestEffectiveLombokConfig UP-TO-DATE
+
+> Task :compileJava FAILED
+/home/codio/workspace/src/main/java/com/novalang/App.java:55: error: variable vmFactory is already defined in method main(String...)
+                NovaVMFactory vmFactory = new DefaultNovaVMFactory();
+                              ^
+1 error
+
+[Incubating] Problems report is available at: file:///home/codio/workspace/build/reports/problems/problems-report.html
+
+FAILURE: Build failed with an exception.
+
+* What went wrong:
+Execution failed for task ':compileJava' (registered by plugin class 'org.gradle.api.plugins.JavaBasePlugin').
+> Compilation failed; see the compiler output below.
+  /home/codio/workspace/src/main/java/com/novalang/App.java:55: error: variable vmFactory is already defined in method main(String...)
+                  NovaVMFactory vmFactory = new DefaultNovaVMFactory();
+                                ^
+  1 error
+
+* Try:
+> Check your code and dependencies to fix the compilation error(s)
+> Run with --scan to get full insights from a Build Scan (powered by Develocity).
+
+BUILD FAILED in 1s
+3 actionable tasks: 1 executed, 2 up-to-date
+Configuration cache entry reused.

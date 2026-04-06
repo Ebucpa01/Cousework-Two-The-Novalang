@@ -21,12 +21,11 @@ public record MovInstr(String label, int rDest, int rSrc) implements Instruction
 
     @Override
     public Optional<Integer> execute(ProgramContext context) {
-        // Copy register[rSrc] into register[rDest]
-        return context.registers().get(rSrc).flatMap(val -> {
-            if (context.registers().set(rDest, val)) {
-                return Optional.of(context.pc() + 1);
-            }
-            return Optional.empty();
-        });
+    int val = context.registers().get(rSrc);
+
+    if (context.registers().set(rDest, val)) {
+        return Optional.of(context.pc() + 1);
     }
+    return Optional.empty();
+}
 }

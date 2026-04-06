@@ -23,16 +23,12 @@ public record DivInstr(String label, int rDest, int rSrc1, int rSrc2) implements
 
     @Override
     public Optional<Integer> execute(ProgramContext context) {
-        return context.registers().get(rSrc1).flatMap(val1 ->
-                context.registers().get(rSrc2).flatMap(val2 -> {
-                    // Correctness: Robust Error Handling (Divide-by-zero)
-                    if (val2 == 0) {
-                        return Optional.empty();
-                    }
-                    if (context.registers().set(rDest, val1 / val2)) {
-                        return Optional.of(context.pc() + 1);
-                    }
-                    return Optional.empty();
-                }));
+    int val1 = context.registers().get(rSrc1);
+    int val2 = context.registers().get(rSrc2);
+
+    if (context.registers().set(rDest, val1 - val2)) {
+        return Optional.of(context.pc() + 1);
     }
-}
+    return Optional.empty();
+    }
+    }
